@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NileRide — Driver Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--card:#161616;--card2:#1e1e1e;--green:#00c853;--green2:#00a846;--gbg:rgba(0,200,83,.1);--border:#2a2a2a;--text:#f0f0f0;--muted:#888;--white:#fff;--red:#ff4d4d;--gold:#ffd600;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;}
+.screen{display:none;min-height:100vh;}
+.screen.show{display:flex;flex-direction:column;}
+#ls{align-items:center;justify-content:center;padding:20px;background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(0,200,83,.12),transparent);}
+.lc{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:38px 30px;max-width:360px;width:100%;text-align:center;}
+.ll{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:6px;}
+.li{width:38px;height:38px;background:var(--green);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+.lt{font-size:1.2rem;font-weight:900;color:var(--white);}
+.lt span{color:var(--green);}
+.lb{display:inline-block;background:var(--gbg);color:var(--green);font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:18px;}
+.lti{font-size:1.05rem;font-weight:800;color:var(--white);margin-bottom:3px;}
+.ls2{font-size:.78rem;color:var(--muted);margin-bottom:20px;}
+.f{margin-bottom:11px;text-align:left;}
+.f label{font-size:.68rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:4px;}
+.inp{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:11px 12px;font-family:'Inter',sans-serif;font-size:.86rem;color:var(--text);outline:none;transition:border-color .2s;}
+.inp:focus{border-color:var(--green);}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;padding:12px;border-radius:10px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;}
+.bg{background:var(--green);color:#000;}.bg:hover{background:var(--green2);}
+.bo{background:transparent;color:var(--text);border:1.5px solid var(--border);margin-top:7px;}.bo:hover{border-color:var(--red);color:var(--red);}
+.bsm{width:auto;padding:7px 14px;font-size:.76rem;border-radius:8px;}
+.eb{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.2);border-radius:9px;padding:9px 12px;font-size:.78rem;color:var(--red);margin-top:9px;display:none;}
+.eb.show{display:block;}
+.hint{font-size:.72rem;color:var(--muted);margin-top:12px;line-height:1.8;}
+.hint a{color:var(--green);text-decoration:none;font-weight:700;}
+
+/* APP */
+.nav{background:var(--card);border-bottom:1px solid var(--border);padding:0 18px;height:54px;display:flex;align-items:center;justify-content:space-between;}
+.nb{display:flex;align-items:center;gap:8px;font-size:.95rem;font-weight:900;color:var(--white);}
+.nb-ic{width:28px;height:28px;background:var(--green);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.82rem;}
+.nb span{color:var(--green);}
+.nbadge{background:var(--gbg);color:var(--green);font-size:.63rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:100px;}
+.nr{display:flex;align-items:center;gap:9px;}
+.nd{font-size:.78rem;color:var(--muted);}
+.nd strong{color:var(--white);}
+
+.content{max-width:780px;margin:0 auto;padding:22px 18px;}
+.sgr{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:22px;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:15px 17px;}
+.sc.g{border-color:rgba(0,200,83,.25);background:rgba(0,200,83,.05);}
+.sc-n{font-size:1.5rem;font-weight:900;color:var(--white);}
+.sc.g .sc-n{color:var(--green);}
+.sc-l{font-size:.66rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.sec-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;}
+.sec-t{font-size:.95rem;font-weight:800;color:var(--white);}
+.rides-list{display:flex;flex-direction:column;gap:11px;}
+.rc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;}
+.rc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px;}
+.rc-ref{font-size:.68rem;font-weight:700;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;}
+.rc-route{font-size:.9rem;font-weight:800;color:var(--white);}
+.rc-fare{font-size:1.05rem;font-weight:900;color:var(--green);text-align:right;}
+.sbadge{display:inline-block;padding:3px 8px;border-radius:100px;font-size:.63rem;font-weight:800;text-transform:uppercase;}
+.st-assigned{background:rgba(59,130,246,.12);color:#60a5fa;}
+.st-completed{background:rgba(0,200,83,.12);color:var(--green);}
+.st-cancelled{background:rgba(255,77,77,.12);color:var(--red);}
+.st-pending{background:rgba(255,214,0,.12);color:var(--gold);}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px;}
+.mi{background:var(--card2);border-radius:8px;padding:9px 11px;}
+.mi-l{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:2px;}
+.mi-v{font-size:.8rem;font-weight:600;color:var(--text);}
+.mi-v a{color:var(--green);text-decoration:none;font-weight:700;}
+.ra{display:flex;gap:9px;}
+.btn-done{flex:1;background:var(--green);color:#000;border:none;border-radius:9px;padding:10px;font-family:'Inter',sans-serif;font-size:.83rem;font-weight:700;cursor:pointer;transition:background .2s;}
+.btn-done:hover{background:var(--green2);}
+.btn-done:disabled{opacity:.4;cursor:not-allowed;}
+.btn-cncl{background:rgba(255,77,77,.1);color:var(--red);border:1.5px solid rgba(255,77,77,.2);border-radius:9px;padding:10px 16px;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-cncl:hover{background:rgba(255,77,77,.2);}
+.empty{text-align:center;padding:55px 20px;color:var(--muted);}
+.empty-ic{font-size:2.8rem;margin-bottom:9px;}
+.empty-t{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:3px;}
+.toast{position:fixed;bottom:22px;right:22px;background:var(--green);color:#000;border-radius:11px;padding:11px 18px;font-size:.82rem;font-weight:700;box-shadow:0 8px 28px rgba(0,200,83,.3);z-index:999;animation:su .3s ease;}
+@keyframes su{from{transform:translateY(18px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+</style>
+</head>
+<body>
+
+<div id="ls" class="screen show">
+  <div class="lc">
+    <div class="ll"><div class="li">🚗</div><span class="lt">Nile<span>Ride</span></span></div>
+    <div class="lb">Driver Portal</div>
+    <div class="lti">Driver Login</div>
+    <div class="ls2">Log in with your registered driver phone and password</div>
+    <div class="f"><label>Phone Number</label><input class="inp" type="tel" id="dp" placeholder="+211 9__ ___ ___" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="f"><label>Password</label><input class="inp" type="password" id="dpw" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="btn bg" onclick="doLogin()">Log In →</button>
+    <div class="eb" id="de"></div>
+    <div class="hint">No driver account?<br>Contact admin: <a href="tel:+211920000000">+211 920 000 000</a><br><br><a href="/">← Customer site</a> &nbsp;·&nbsp; <a href="/admin.html">Admin →</a></div>
+  </div>
+</div>
+
+<div id="as" class="screen">
+  <nav class="nav">
+    <div class="nb"><div class="nb-ic">🚗</div>Nile<span>Ride</span><span class="nbadge">Driver</span></div>
+    <div class="nr">
+      <span class="nd">Welcome, <strong id="dName">—</strong></span>
+      <button class="btn bo bsm" onclick="dLogout()" style="margin:0;padding:7px 13px;">Log Out</button>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="sgr">
+      <div class="sc g"><div class="sc-n" id="dTotal">0</div><div class="sc-l">Total Assigned</div></div>
+      <div class="sc"><div class="sc-n" id="dActive">0</div><div class="sc-l">Active Rides</div></div>
+      <div class="sc"><div class="sc-n" id="dDone">0</div><div class="sc-l">Completed</div></div>
+    </div>
+    <div class="sec-h">
+      <div class="sec-t">My Assigned Rides</div>
+      <button class="btn bo bsm" onclick="loadRides()" style="margin:0;">⟳ Refresh</button>
+    </div>
+    <div class="rides-list" id="rList">
+      <div class="empty"><div class="empty-ic">⏳</div><p>Loading…</p></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API='';
+let dToken=localStorage.getItem('nrd')||'';
+let dInfo=JSON.parse(localStorage.getItem('nrdi')||'null');
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const ph=document.getElementById('dp');
+  ph.addEventListener('focus',()=>{if(!ph.value)ph.value='+211 ';});
+  if(dToken&&dInfo)showApp();
+});
+
+async function doLogin(){
+  const phone=document.getElementById('dp').value.trim().replace(/\s+/g,'');
+  const pw=document.getElementById('dpw').value;
+  const err=document.getElementById('de');
+  err.classList.remove('show');
+  if(!phone||!pw){err.textContent='Enter phone and password';err.classList.add('show');return;}
+  try{
+    const res=await fetch(`${API}/api/driver/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,password:pw})});
+    const d=await res.json();
+    if(!res.ok){err.textContent=d.error;err.classList.add('show');return;}
+    dToken=d.token;dInfo=d.driver;
+    localStorage.setItem('nrd',dToken);localStorage.setItem('nrdi',JSON.stringify(dInfo));
+    showApp();
+  }catch{err.textContent='Cannot connect to server';err.classList.add('show');}
+}
+
+function showApp(){
+  document.getElementById('ls').classList.remove('show');
+  document.getElementById('as').classList.add('show');
+  document.getElementById('dName').textContent=dInfo.name;
+  loadRides();
+  setInterval(loadRides,30000);
+}
+
+function dLogout(){
+  dToken='';dInfo=null;
+  localStorage.removeItem('nrd');localStorage.removeItem('nrdi');
+  location.reload();
+}
+
+async function loadRides(){
+  try{
+    const res=await fetch(`${API}/api/driver/rides`,{headers:{Authorization:'Bearer '+dToken}});
+    const d=await res.json();
+    if(res.status===401){dLogout();return;}
+    const rides=d.rides||[];
+    document.getElementById('dTotal').textContent=rides.length;
+    document.getElementById('dActive').textContent=rides.filter(r=>r.status==='assigned').length;
+    document.getElementById('dDone').textContent=rides.filter(r=>r.status==='completed').length;
+    renderRides(rides);
+  }catch{}
+}
+
+function renderRides(rides){
+  const list=document.getElementById('rList');
+  if(!rides.length){list.innerHTML='<div class="empty"><div class="empty-ic">📭</div><div class="empty-t">No rides assigned yet</div><p style="font-size:.8rem;color:var(--muted);margin-top:3px;">Rides assigned by admin will appear here</p></div>';return;}
+  const ic={'boda-boda':'🏍️',sedan:'🚗',suv:'🚙'};
+  list.innerHTML=rides.map(r=>`
+    <div class="rc">
+      <div class="rc-top">
+        <div><div class="rc-ref">${r.ref}</div><div class="rc-route">${r.pickup} → ${r.destination}</div></div>
+        <div><div class="rc-fare">SSP ${(r.estimatedFare||0).toLocaleString()}</div><span class="sbadge st-${r.status}">${stLbl(r.status)}</span></div>
+      </div>
+      <div class="mg">
+        <div class="mi"><div class="mi-l">Customer</div><div class="mi-v">${r.customerName||'—'}</div></div>
+        <div class="mi"><div class="mi-l">Phone</div><div class="mi-v"><a href="tel:${r.customerPhone}">${r.customerPhone||'—'}</a></div></div>
+        <div class="mi"><div class="mi-l">Date & Time</div><div class="mi-v">${r.date} · ${r.time}</div></div>
+        <div class="mi"><div class="mi-l">Payment</div><div class="mi-v">${r.paymentMethod||'Cash'}</div></div>
+        <div class="mi"><div class="mi-l">Vehicle</div><div class="mi-v">${ic[r.vehicleType]||''} ${r.vehicleType}</div></div>
+        ${r.notes?`<div class="mi"><div class="mi-l">Notes</div><div class="mi-v">${r.notes}</div></div>`:''}
+      </div>
+      ${r.status!=='completed'&&r.status!=='cancelled'?`
+      <div class="ra">
+        <button class="btn-done" onclick="updateStatus('${r._id}','completed',this)">✅ Mark as Completed</button>
+        <button class="btn-cncl" onclick="updateStatus('${r._id}','cancelled',this)">✕ Cancel</button>
+      </div>`:''}
+    </div>`).join('');
+}
+
+async function updateStatus(id,status,btn){
+  if(!confirm(`Mark this ride as ${status}?`))return;
+  btn.disabled=true;
+  try{
+    const res=await fetch(`${API}/api/driver/rides/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json',Authorization:'Bearer '+dToken},body:JSON.stringify({status})});
+    if(res.status===401){dLogout();return;}
+    if(res.ok){toast(status==='completed'?'✅ Ride marked as completed!':'Ride cancelled');loadRides();}
+  }catch{btn.disabled=false;}
+}
+
+function stLbl(s){return{assigned:'🚗 Assigned',completed:'✅ Completed',cancelled:'❌ Cancelled',pending:'⏳ Pending'}[s]||s;}
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000);}
+</script>
+</body>
+</html>
