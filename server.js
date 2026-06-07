@@ -21,11 +21,23 @@ const ADMIN_TOK  = crypto.createHash('sha256').update(ADMIN_PWD).digest('hex');
 let db;
 async function connectDB() {
   if (!MONGO_URI) {
-    console.error('❌  MONGO_URI env var not set. Add it to your Render environment variables.');
-    console.error('    Get a free URI from https://mongodb.com/atlas');
+    console.error('MONGO_URI env var not set.');
     process.exit(1);
   }
-  const client = new MongoClient(MONGO_URI);
+
+  // Auto-fix URI — adds ?retryWrites=true&w=majority if missing
+  let uri = MONGO_URI.trim();
+  if (uri.includes('.net/') && !uri.includes('?')) {
+    uri += '?retryWrites=true&w=majority&appName=nileride';
+    console.log('Auto-fixed URI: added query options');
+  }
+  if (uri.match(/\.net\/?$/) || uri.endsWith('.net')) {
+    uri = uri.replace(/\/?$/, '') + '/nileride?retryWrites=true&w=majority&appName=nileride';
+    console.log('Auto-fixed URI: added database name and options');
+  }
+
+  console.log('Connecting to MongoDB...');
+  const client = new MongoClient(uri);
   await client.connect();
   db = client.db('nileride');
   // Indexes — safe to run every startup
